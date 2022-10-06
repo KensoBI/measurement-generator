@@ -6,6 +6,6 @@
         public int CharacteristicId { get; set; }
         public int PartId { get; set; }
         public double Value { get; set; }
-        public DateTime CreateTimestamp { get; set; }
+        public DateTime Time { get; set; }
     }
 }

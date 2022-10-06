@@ -14,19 +14,18 @@ namespace DataAccess.Kenso
         private string ConnectionString { get; }
 
         public PostgreSQLCopyHelper<Measurement> CopyHelper =
-            new PostgreSQLCopyHelper<Measurement>("public", "measurements")
-                .MapInteger("partid", x => x.PartId)
-                .MapInteger("characteristicid", x => x.CharacteristicId)
+            new PostgreSQLCopyHelper<Measurement>("public", "measurement")
+                .MapInteger("characteristic_id", x => x.CharacteristicId)
                 .MapNumeric("value", x => (decimal)x.Value)
-                .MapTimeStampTz("create_timestamp", x => x.CreateTimestamp);
+                .MapTimeStampTz("time", x => x.Time);
         public async Task<IList<Characteristic>> GetCharacteristics(int[] partIds)
         {
             var characteristics = new List<Characteristic>();
-            var sql = "SELECT id, partId, featureId, nominal, usl, lsl FROM characteristics";
+            var sql = "SELECT characteristic.id, part_id, part_id, feature_id, nominal, usl, lsl FROM characteristic INNER JOIN feature on feature.id = characteristic.feature_id";
 
             if (partIds.Length > 0)
             {
-                sql += " WHERE partId in (";
+                sql += " WHERE part_id in (";
                 for (var i = 0; i < partIds.Length; i++)
                 {
                     sql += partIds[i];
@@ -73,24 +72,6 @@ namespace DataAccess.Kenso
                 characteristics.Add(characteristic);
             }
             return characteristics;
-        }
-
-        public async Task<int> GetMaxMeasurementId()
-        {
-            await using var conn = new NpgsqlConnection(ConnectionString);
-            await conn.OpenAsync();
-            await using var cmd = new NpgsqlCommand("SELECT MAX(id) FROM measurements", conn);
-            await using var reader = await cmd.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
-            {
-                if (!reader.IsDBNull(0))
-                {
-                    return reader.GetInt32(0);
-                }
-            }
-
-            return 0;
         }
 
         public async Task Save(IList<Measurement> measurements)

@@ -1,22 +1,110 @@
 ﻿using Models;
+using Npgsql;
+using PostgreSQLCopyHelper;
 
 namespace DataAccess.QDAS
 {
     public class QdasPgRepository : IRepository 
     {
-        public Task<IList<Characteristic>> GetCharacteristics(int[] partIds)
+        public QdasPgRepository(string connectionString)
         {
-            throw new NotImplementedException();
+            ConnectionString = connectionString;
         }
 
-        public Task<int> GetMaxMeasurementId()
+        private string ConnectionString { get; }
+
+        public async Task<int> GetMaxMeasurementId()
         {
-            throw new NotImplementedException();
+            await using var conn = new NpgsqlConnection(ConnectionString);
+            await conn.OpenAsync();
+            await using var cmd = new NpgsqlCommand("SELECT MAX(Wvwertnr) FROM wertevar", conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                if (!reader.IsDBNull(0))
+                {
+                    return reader.GetInt32(0);
+                }
+            }
+
+            return 0;
+        }
+        public PostgreSQLCopyHelper<Measurement> CopyHelper =
+            new PostgreSQLCopyHelper<Measurement>("public", "WERTEVAR")
+                .MapSmallInt("WVUNTERS", x => (short)x.CharacteristicId)
+                .MapInteger("WVWERTNR", x => x.Id)
+                .MapInteger("WVTEIL", x => x.PartId)
+                .MapSmallInt("WVMERKMAL", x => (short)x.CharacteristicId)
+                .MapTimeStampTz("WVDATZEIT", x => x.Time)
+                .MapInteger("wvmaschine", (x) => 2)
+                .MapDouble("WVWERT", x => x.Value);
+        public async Task<IList<Characteristic>> GetCharacteristics(int[] partIds)
+        {
+            var characteristics = new List<Characteristic>();
+            var sql = "SELECT memerkmal as id, meteil as part_id, menennmas as nominal, meogw as usl, meugw as lsl FROM merkmal";
+
+            if (partIds.Length > 0)
+            {
+                sql += " WHERE part_id in (";
+                for (var i = 0; i < partIds.Length; i++)
+                {
+                    sql += partIds[i];
+                    if (partIds.Length != i + 1)
+                    {
+                        sql += ",";
+                    }
+                }
+
+                sql += ")";
+            }
+
+            await using var conn = new NpgsqlConnection(ConnectionString);
+            await conn.OpenAsync();
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                var characteristic = new Characteristic();
+                characteristic.Id = reader.GetInt32(0);
+                characteristic.PartId = reader.GetInt32(1);
+                characteristic.Nominal = reader.GetDouble(2);
+
+                if (reader.IsDBNull(3))
+                {
+                    characteristic.Usl = 1;
+                }
+                else
+                {
+                    characteristic.Usl = reader.GetDouble(3);
+                }
+
+                if (reader.IsDBNull(4))
+                {
+                    characteristic.Lsl = -1;
+                }
+                else
+                {
+                    characteristic.Lsl = reader.GetDouble(4);
+                }
+
+                characteristics.Add(characteristic);
+            }
+            return characteristics;
         }
 
-        public Task Save(IList<Measurement> measurements)
+        public async Task Save(IList<Measurement> measurements)
         {
-            throw new NotImplementedException();
+            var measurementId = await GetMaxMeasurementId();
+            foreach (var measurement in measurements)
+            {
+                measurement.Id = ++measurementId;
+            }
+
+            await using var conn = new NpgsqlConnection(ConnectionString);
+            await conn.OpenAsync();
+            await CopyHelper.SaveAllAsync(conn, measurements);
         }
     }
 }

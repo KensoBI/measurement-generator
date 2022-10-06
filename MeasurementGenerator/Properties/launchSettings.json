@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MeasurementGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "--startMonth -3 --schema 2"
+    }
+  }
+}
