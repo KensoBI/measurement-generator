@@ -15,7 +15,7 @@ namespace DataAccess.Kenso
 
         public PostgreSQLCopyHelper<Measurement> CopyHelper =
             new PostgreSQLCopyHelper<Measurement>("public", "measurement")
-                .MapInteger("characteristic_id", x => x.CharacteristicId)
+                .MapBigInt("characteristic_id", x => x.CharacteristicId)
                 .MapNumeric("value", x => (decimal)x.Value)
                 .MapTimeStampTz("time", x => x.Time);
         public async Task<IList<Characteristic>> GetCharacteristics(int[] partIds)

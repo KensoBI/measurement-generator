@@ -105,10 +105,10 @@ namespace Generator
                 while (measPerDay > measPerDayCounter)
                 {
                     measPerDayCounter++;
-                    measurementDate = measurementDate.AddHours(23.0 / measPerDay);
+                    var dateDateTime = measurementDate.AddHours(23.0 / measPerDay);
 
                     var charMeas = new Measurement();
-                    charMeas.Time = DateTime.SpecifyKind(measurementDate, DateTimeKind.Utc);
+                    charMeas.Time = DateTime.SpecifyKind(dateDateTime, DateTimeKind.Utc);
                     charMeas.PartId = characteristic.PartId;
                     charMeas.CharacteristicId = characteristic.Id;
                     charMeas.Value = CalculateNextValue(currentValue, characteristic.Usl, characteristic.Lsl);
