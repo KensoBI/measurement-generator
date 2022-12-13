@@ -91,6 +91,7 @@ namespace Generator
         public List<Measurement> GetMeasurementsForDate(Characteristic[] characteristics, DateTime measurementDate, int measPerDay)
         {
             var measurements = new List<Measurement>();
+            var ticks = TimeSpan.TicksPerDay / measPerDay;
 
             foreach (var characteristic in characteristics)
             {
@@ -100,12 +101,13 @@ namespace Generator
                 }
 
                 var measPerDayCounter = 0;
-                
                 var currentValue = characteristic.Nominal - _rand.NextDouble();
+                var measDay = measurementDate.Date;
+                var dateDateTime = measDay;
                 while (measPerDay > measPerDayCounter)
                 {
                     measPerDayCounter++;
-                    var dateDateTime = measurementDate.AddHours(23.0 / measPerDay);
+                    dateDateTime = dateDateTime.AddTicks(ticks);
 
                     var charMeas = new Measurement();
                     charMeas.Time = DateTime.SpecifyKind(dateDateTime, DateTimeKind.Utc);

@@ -21,7 +21,7 @@ namespace DataAccess.Kenso
         public async Task<IList<Characteristic>> GetCharacteristics(int[] partIds)
         {
             var characteristics = new List<Characteristic>();
-            var sql = "SELECT characteristic.id, part_id, part_id, feature_id, nominal, usl, lsl FROM characteristic INNER JOIN feature on feature.id = characteristic.feature_id";
+            var sql = "SELECT characteristic.id, part_id, feature_id, nominal, usl, lsl FROM characteristic INNER JOIN feature on feature.id = characteristic.feature_id";
 
             if (partIds.Length > 0)
             {

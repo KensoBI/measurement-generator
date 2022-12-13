@@ -2,7 +2,7 @@
   "profiles": {
     "MeasurementGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "--startMonth -3 --schema 2"
+      "commandLineArgs": "--schema 1 --startMonth -3 --endMonth 3 --measurements 20000 "
     }
   }
 }
