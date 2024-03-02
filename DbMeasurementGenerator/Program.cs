@@ -1,5 +1,5 @@
 ﻿using System.CommandLine;
-using Generator;
+using MeasurementGenerator;
 using Microsoft.Extensions.Configuration;
 
 IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
@@ -39,8 +39,9 @@ rootCommand.SetHandler(async (startMonth, endMonth, numOfMeasurements, schema) =
             Console.WriteLine("Supplied options are not valid.");
             return;
         }
-        var gen = new Generator.Generator(options);
-        await gen.Start();
+        //todo
+        //var gen = new Generator(options);
+        //await gen.Start();
     },
     startMonthOption, endMonthOption, numberOfMeasurementsOption, schemaOption);
 

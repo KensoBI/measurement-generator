@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasurementGenerator", "MeasurementGenerator\MeasurementGenerator.csproj", "{070D24D5-0D8B-41E5-ABA6-07D5881AD792}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbMeasurementGenerator", "DbMeasurementGenerator\DbMeasurementGenerator.csproj", "{070D24D5-0D8B-41E5-ABA6-07D5881AD792}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{66E0D373-C7B0-4128-B787-B91B2BF727C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{94262C08-6678-4B35-A1D9-B03DDFFA2FC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generator\Generator.csproj", "{1A59B9DE-1F7E-42E7-AA29-689B195E1C25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasurementGenerator", "MeasurementGenerator\MeasurementGenerator.csproj", "{1A59B9DE-1F7E-42E7-AA29-689B195E1C25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasurementStreamingService", "MeasurementStreamingService\MeasurementStreamingService.csproj", "{BB45E509-0BC8-4D6C-8B6D-93F41B542585}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementGeneratorConsumer", "MeasurementGeneratorConsumer\MeasurementGeneratorConsumer.csproj", "{876A8AB7-D346-4995-8EF8-9A0399A50F27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{1A59B9DE-1F7E-42E7-AA29-689B195E1C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A59B9DE-1F7E-42E7-AA29-689B195E1C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A59B9DE-1F7E-42E7-AA29-689B195E1C25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB45E509-0BC8-4D6C-8B6D-93F41B542585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB45E509-0BC8-4D6C-8B6D-93F41B542585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB45E509-0BC8-4D6C-8B6D-93F41B542585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB45E509-0BC8-4D6C-8B6D-93F41B542585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{876A8AB7-D346-4995-8EF8-9A0399A50F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{876A8AB7-D346-4995-8EF8-9A0399A50F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{876A8AB7-D346-4995-8EF8-9A0399A50F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{876A8AB7-D346-4995-8EF8-9A0399A50F27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

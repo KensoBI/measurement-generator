@@ -2,11 +2,11 @@
 {
     public class GeneratorOptions
     {
-        public IRepository Repository { get; set; }
         public double StandardDev { get; set; }
-        public int NumberOfMeasurements{ get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public bool Truncate { get; set; }
+        public int NumberOfMeasurementsPerDay { get; set; }
+        public long? PartId { get; set; }
+        public string AssetKey { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

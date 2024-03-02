@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Kenso.Domain;
+using Models;
 using Npgsql;
 using PostgreSQLCopyHelper;
 
@@ -30,18 +31,18 @@ namespace DataAccess.QDAS
 
             return 0;
         }
-        public PostgreSQLCopyHelper<Measurement> CopyHelper =
-            new PostgreSQLCopyHelper<Measurement>("public", "WERTEVAR")
+        public PostgreSQLCopyHelper<MeasurementRecord> CopyHelper =
+            new PostgreSQLCopyHelper<MeasurementRecord>("public", "WERTEVAR")
                 .MapSmallInt("WVUNTERS", x => (short)x.CharacteristicId)
                 .MapInteger("WVWERTNR", x => x.Id)
-                .MapInteger("WVTEIL", x => x.PartId)
+                .MapInteger("WVTEIL", x => (int) x.PartId)
                 .MapSmallInt("WVMERKMAL", x => (short)x.CharacteristicId)
                 .MapTimeStampTz("WVDATZEIT", x => x.Time)
                 .MapInteger("wvmaschine", (x) => 2)
                 .MapDouble("WVWERT", x => x.Value);
-        public async Task<IList<Characteristic>> GetCharacteristics(int[] partIds)
+        public async Task<MeasurementRecord[]> GetCharacteristics(long[] partIds)
         {
-            var characteristics = new List<Characteristic>();
+            var characteristics = new List<CharacteristicRecord>();
             var sql = "SELECT memerkmal as id, meteil as part_id, menennmas as nominal, meogw as usl, meugw as lsl FROM merkmal";
 
             if (partIds.Length > 0)
@@ -66,7 +67,7 @@ namespace DataAccess.QDAS
 
             while (await reader.ReadAsync())
             {
-                var characteristic = new Characteristic();
+                var characteristic = new CharacteristicRecord();
                 characteristic.Id = reader.GetInt32(0);
                 characteristic.PartId = reader.GetInt32(1);
                 characteristic.Nominal = reader.GetDouble(2);
@@ -94,7 +95,9 @@ namespace DataAccess.QDAS
             return characteristics;
         }
 
-        public async Task Save(IList<Measurement> measurements)
+
+
+        public async Task Save(IList<MeasurementRecord> measurements)
         {
             var measurementId = await GetMaxMeasurementId();
             foreach (var measurement in measurements)

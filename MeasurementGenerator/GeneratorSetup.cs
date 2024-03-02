@@ -1,9 +1,7 @@
-﻿using DataAccess.Kenso;
-using DataAccess.QDAS;
+﻿using Microsoft.Extensions.Configuration;
 using Models;
-using Microsoft.Extensions.Configuration;
 
-namespace Generator
+namespace MeasurementGenerator
 {
     public class GeneratorSetup
     {
@@ -18,19 +16,10 @@ namespace Generator
         {
             var options = new GeneratorOptions();
             options.StartDate = GetStartDate(startMonth);
-            options.EndDate = GetEndDate(options.StartDate, endMonth);
-            options.NumberOfMeasurements = GetNumberOfMeasurements(numOfMeasurements);
+            options.EndDate = GetEndDate(options.StartDate.Value, endMonth);
+            options.NumberOfMeasurementsPerDay= GetNumberOfMeasurements(numOfMeasurements);
             options.StandardDev = GetStdDev();
 
-            var repo = GetRepoForSchema(schema);
-
-            if (repo == null)
-            {
-                Console.WriteLine("Connection string not set or schema not supported.");
-                return null;
-            }
-
-            options.Repository = repo;
             return options;
         }
 
@@ -94,26 +83,27 @@ namespace Generator
             return stdDev;
         }
 
-        public IRepository? GetRepoForSchema(int? schema)
-        {
-            string connectionString;
+        //public IRepository? GetRepoForSchema(int? schema)
+        //{
+        //    string connectionString;
 
-            if (schema is not > 0) return null;
+        //    if (schema is not > 0) return null;
 
-            switch (schema)
-            {
-                case 1:
-                    Console.WriteLine("Database set to Postgres, schema: Kenso");
-                    connectionString = _configuration.GetConnectionString("postgres-kenso");
-                    return new KensoPgRepository(connectionString);
-                case 2:
-                    Console.WriteLine("Database set to Postgres, schema: QDAS");
-                    connectionString = _configuration.GetConnectionString("postgres-qdas");
-                    return new QdasPgRepository(connectionString);
+        //    switch (schema)
+        //    {
+        //        case 1:
+        //            Console.WriteLine("Database set to Postgres, schema: Kenso");
+        //            connectionString = _configuration.GetConnectionString("postgres-kenso");
+        //            return new KensoPgRepository(connectionString);
+        //        case 2:
+        //            Console.WriteLine("Database set to Postgres, schema: QDAS");
+        //            connectionString = _configuration.GetConnectionString("postgres-qdas");
+        //            //return new QdasPgRepository(connectionString);
+        //            return null;
 
-            }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
     }
 }
